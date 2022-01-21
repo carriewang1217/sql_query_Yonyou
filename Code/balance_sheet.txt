@@ -1,0 +1,53 @@
+select t.DATE_YEAR,
+       t.MONTH,
+       t.RG_CODE,
+       t.DEPT_CODE,
+       t.DEPT_NAME,
+       t.AGENCY_CODE,
+       t.AGENCY_NAME,
+       t.xm_code,
+       t.xm_name,
+       t.yw_type,
+       t.data_version,
+       decode(SUM(t.ZCZE),0,0,round(sum(t.FZZE)/SUM(t.ZCZE),2)) ZCFZL,
+       max(t.DATA_ID)
+  from 
+(SELECT a.DATE_YEAR,
+       a.MONTH,
+       a.RG_CODE,
+       a.DEPT_CODE,
+       a.DEPT_NAME,
+       a.AGENCY_CODE,
+       a.AGENCY_NAME,
+       'ZCFZL' XM_CODE,
+       '资产负债率' xm_name,
+       a.YW_TYPE,
+       a.DATA_VERSION,
+       sum(case when A.XM_CODE = 'zcfz01' then a.QMS1 end) ZCZE,
+       sum(case when A.XM_CODE_FZ = 'zcfz02' then a.QMS2 end) FZZE,
+       MAX(A.DATA_ID) DATA_ID
+  FROM V_NPCS_ODS_GZ_XZSY_ZCFZ A
+ --WHERE  a.DEPT_CODE = '001013'
+ GROUP BY a.DATE_YEAR,
+          a.MONTH,
+          a.RG_CODE,
+          a.DEPT_CODE,
+          a.DEPT_NAME,
+          a.AGENCY_CODE,
+          a.AGENCY_NAME,
+          a.YW_TYPE,
+          a.DATA_VERSION) T
+group by t.DATE_YEAR,
+       t.MONTH,
+       t.RG_CODE,
+       t.DEPT_CODE,
+       t.DEPT_NAME,
+       t.AGENCY_CODE,
+       t.AGENCY_NAME,
+       t.xm_code,
+       t.xm_name,
+       t.yw_type,
+       t.data_version      
+          
+          
+--select * from  V_NPCS_ODS_GZ_XZSY_ZCFZ V WHERE v.DEPT_CODE = '001013' and v.YEAR = '2019'

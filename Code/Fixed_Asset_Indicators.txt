@@ -1,0 +1,42 @@
+SELECT A.DATE_YEAR,
+               A.RG_CODE,
+               A.DEPT_CODE,
+               A.DEPT_NAME,
+               'zcfzhz01020302' xm_code,
+               '固定资产增长率' xm_name,
+               a.ZJ_QMS_ZMS NMZCZE,
+               a.ZJ_QCS_ZMS NCZCCL,
+               A.DATA_ID
+          FROM V_NPCS_ODS_GH_XZSY_ZCFZ A
+         WHERE A.XM_CODE = 'zcfzhz01020302' and a.YEAR ='2019'
+         union all
+         SELECT A.DATE_YEAR,
+               A.RG_CODE,
+               A.DEPT_CODE,
+               A.DEPT_NAME,
+               'zcfzhz01020302' xm_code,
+               '固定资产增长率' xm_name,
+               a.ZJ_QMS_SYS NMZCZE,
+               a.ZJ_QCS_ZMS NCZCCL,
+               A.DATA_ID
+          FROM V_NPCS_ODS_GH_XZSY_ZCFZ A
+         WHERE A.XM_CODE = 'zcfzhz01020302' and a.YEAR ='2018'
+         union all
+         SELECT A.DATE_YEAR,
+               A.RG_CODE,
+               A.DEPT_CODE,
+               A.DEPT_NAME,
+               'zcfzhz01020302' xm_code,
+               '固定资产增长率' xm_name,
+               case when a.XZDW_XM_CODE = 'zcfzhz01020302' then nvl(a.XZDW_QMS_SYS,0) 
+                    when A.SYDW_XM_CODE = 'zcfzhz01020302' then nvl(a.SYDW_QMS_SYS,0)
+                    when trim(a.MJZZ_XM_NAME) = '固定资产净值' then nvl(a.MJZZ_QMS_SYS,0) end NMZCZE,
+               case when a.XZDW_XM_CODE = 'zcfzhz01020302' then nvl(a.XZDW_QCS_ZMS,0) 
+                    when A.SYDW_XM_CODE = 'zcfzhz01020302' then nvl(a.SYDW_QCS_ZMS,0)
+                    when trim(a.MJZZ_XM_NAME) = '固定资产净值' then nvl(a.MJZZ_QCS_ZMS,0) end NMZCZE,
+               --nvl(a.XZDW_QMS_SYS,0)+nvl(a.SYDW_QMS_SYS,0)+nvl(a.MJZZ_QMS_SYS,0) NMZCZE,
+               --nvl(a.XZDW_QCS_ZMS,0)+nvl(a.SYDW_QCS_ZMS,0)+nvl(a.MJZZ_QCS_ZMS,0) NCZCCL,
+               A.DATA_ID
+          FROM V_NPCS_ODS_GH_XZSY_ZCFZ A
+         WHERE (a.XZDW_XM_CODE='zcfzhz01020302' or A.SYDW_XM_CODE = 'zcfzhz01020302' or trim(a.MJZZ_XM_NAME) = '固定资产净值') 
+         and a.YEAR ='2017' 
